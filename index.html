@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>실전 프로젝트 01 비교 분석</title>
+    <title>프로젝트 과제 분석</title>
     <style>
         * {
             margin: 0;
@@ -84,8 +84,8 @@
         }
         
         .card.hidden {
-            opacity: 0.3;
-            pointer-events: none;
+            /* opacity: 0.3; (필터링 시 부자연스러워서 변경) */
+            display: none;
         }
         
         .card:hover {
@@ -210,7 +210,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>🎯 실전 프로젝트 01 비교 분석</h1>
+        <h1>🎯 실전 프로젝트 과제 비교 분석</h1>
         <p class="subtitle">4인 팀, 35시간(1주일) 기준</p>
         
         <div class="filter-buttons">
@@ -221,7 +221,6 @@
         </div>
         
         <div class="cards-grid">
-            <!-- 1. AI-Human 판별 -->
             <div class="card" data-difficulty="easy">
                 <div class="card-title">1️⃣ AI-Human 판별</div>
                 <div class="difficulty">난이도: ⭐⭐ (2/5)</div>
@@ -258,7 +257,6 @@
                 <div class="recommendation">추천 대상: 첫 프로젝트 경험이 부족한 팀</div>
             </div>
             
-            <!-- 2. 긴급도 판별 -->
             <div class="card" data-difficulty="medium">
                 <div class="card-title">2️⃣ 긴급도 판별</div>
                 <div class="difficulty">난이도: ⭐⭐⭐ (3/5)</div>
@@ -296,7 +294,6 @@
                 <div class="recommendation">추천 대상: AI/음성 처리 경험 있는 팀</div>
             </div>
             
-            <!-- 3. 발화자 감정 판별 -->
             <div class="card" data-difficulty="medium">
                 <div class="card-title">3️⃣ 발화자 감정 판별</div>
                 <div class="difficulty">난이도: ⭐⭐⭐ (3/5)</div>
@@ -334,7 +331,6 @@
                 <div class="recommendation">주의: 라벨 품질 이슈로 성능 향상 제한적</div>
             </div>
             
-            <!-- 4. AI 품질 평가 -->
             <div class="card" data-difficulty="easy">
                 <div class="card-title">4️⃣ AI 품질 평가</div>
                 <div class="difficulty">난이도: ⭐⭐ (2/5)</div>
@@ -372,7 +368,6 @@
                 <div class="recommendation">추천 대상: 제한된 시간으로 빠르게 완성하고 싶은 팀</div>
             </div>
             
-            <!-- 5. 난독화 복원 -->
             <div class="card" data-difficulty="easy">
                 <div class="card-title">5️⃣ 난독화 복원</div>
                 <div class="difficulty">난이도: ⭐⭐ (2/5)</div>
@@ -410,7 +405,6 @@
                 <div class="recommendation">주의: 데이터 크기 부족 → 성능 향상 어려움</div>
             </div>
             
-            <!-- 6. 코드 유사도 판별 -->
             <div class="card" data-difficulty="hard">
                 <div class="card-title">6️⃣ 코드 유사도 판별</div>
                 <div class="difficulty">난이도: ⭐⭐⭐⭐ (4/5)</div>
@@ -451,7 +445,6 @@
             </div>
         </div>
         
-        <!-- 최종 추천 요약 -->
         <div class="summary-section">
             <div class="summary-title">📋 최종 추천 요약</div>
             <div class="summary-grid">
@@ -503,15 +496,36 @@
             const cards = document.querySelectorAll('.card');
             const buttons = document.querySelectorAll('.filter-btn');
             
+            // 모든 버튼 비활성화
             buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            
+            // 클릭된 카테고리에 해당하는 버튼 활성화
+            buttons.forEach(btn => {
+                if (btn.getAttribute('onclick') === `filterCards('${difficulty}')`) {
+                    btn.classList.add('active');
+                }
+            });
             
             cards.forEach(card => {
+                const cardDifficulty = card.dataset.difficulty;
+                let showCard = false; // 기본값은 숨김
+
+                // 카테고리별로 표시할 카드인지 판단
                 if (difficulty === 'all') {
+                    showCard = true;
+                } else if (difficulty === cardDifficulty) {
+                    // 'easy', 'medium', 'hard'를 모두 처리
+                    showCard = true;
+                }
+                
+                // 판단 결과에 따라 클래스 토글
+                if (showCard) {
                     card.classList.remove('hidden');
-                } else if (difficulty === 'easy' && card.dataset.difficulty === 'easy') {
-                    card.classList.remove('hidden');
-                } else if (difficulty === 'medium' && card.dataset.difficulty === 'medium') {
-                    card.classList.remove('hidden');
-                } else if (difficulty === 'hard' && card.dataset.difficulty === 'hard') {
-                    card.classList
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
